@@ -1,18 +1,28 @@
 require_relative 'tile'
 
 class Board
+  NUM_OF_BOMB = 9
+
   def empty_grid
     Array.new(9) do
       Array.new(9) { Tile.new }
     end
   end
 
-  def self.populated_grid
-    board = Board.new
-    board.each_with_pos do |tile, _|
-      tile.set_bomb
+  def populate #with bombs
+    positions = self.bomb_positions
+    self.each_with_pos do |tile, pos|
+      tile.set_bomb if positions.include?(pos)
     end
-    board
+  end
+
+  def bomb_positions
+    positions = []
+    self.each_with_pos do |_, pos|
+      positions << pos
+    end
+    positions.shuffle!
+    positions.take(NUM_OF_BOMB)
   end
 
   def initialize(grid = empty_grid)
@@ -29,6 +39,7 @@ class Board
         prc.call(tile, [idx1, idx2])
       end
     end
+    self
   end
 
   def [](pos)
@@ -51,5 +62,11 @@ class Board
       puts row.map(&:to_s).join(' ')
     end
     self
+  end
+
+  def make_visible
+    each_with_pos do |tile, _|
+      tile.reveal
+    end
   end
 end
