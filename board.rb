@@ -19,6 +19,10 @@ class Board
     @grid = grid
   end
 
+  def inspect
+    size
+  end
+
   def each_with_pos(&prc)
     @grid.each_with_index do |row, idx1|
       row.each_with_index do |tile, idx2|
@@ -46,5 +50,6 @@ class Board
       print "#{idx} "
       puts row.map(&:to_s).join(' ')
     end
+    self
   end
 end

@@ -32,7 +32,10 @@ class Tile
 
   def to_s
     if revealed?
+      return "b" if bomb?
+      return "_"
     else
+      "*"
     end
   end
 
