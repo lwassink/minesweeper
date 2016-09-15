@@ -67,9 +67,11 @@ class Tile
 
   def to_s
     if revealed?
-      return "b" if bomb?
-      "_"
+      return "B" if bomb?
+      return "_" if neighbor_bomb_count == 0
+      neighbor_bomb_count.to_s
     else
+      return "F" if flag?
       "*"
     end
   end
