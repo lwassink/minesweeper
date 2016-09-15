@@ -4,8 +4,13 @@ class Board
   NUM_OF_BOMB = 9
 
   def empty_grid
-    Array.new(9) do
-      Array.new(9) { Tile.new }
+    Array.new(9) do |row|
+      Array.new(9) do |col|
+         tile = Tile.new
+         tile.board = self
+         tile.position = [row, col]
+         tile
+       end
     end
   end
 
