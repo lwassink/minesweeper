@@ -1,7 +1,7 @@
 require_relative 'tile'
 
 class Board
-  NUM_OF_BOMB = 9
+  NUM_OF_BOMB = 1
 
   def empty_grid
     Array.new(9) do |row|
@@ -32,6 +32,16 @@ class Board
 
   def initialize(grid = empty_grid)
     @grid = grid
+  end
+
+  def reveal(pos)
+    tile = self[pos]
+    return nil if tile.revealed? #this should stop the infinite loop of two blank tiles
+
+    tile.reveal
+    if tile.neighbor_bomb_count == 0
+      tile.neighbors.each { |neighbor| reveal(neighbor.position) }
+    end
   end
 
   def inspect
