@@ -36,7 +36,7 @@ class Board
 
   def reveal(pos)
     tile = self[pos]
-    return nil if tile.revealed? #this should stop the infinite loop of two blank tiles
+    return nil if tile.revealed?
 
     tile.reveal
     if tile.neighbor_bomb_count == 0

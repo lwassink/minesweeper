@@ -6,15 +6,12 @@ class Tile
   def initialize(bomb = false)
     @bomb = bomb
     @revealed = false
-    @flag = false
+    @flagged = false
     @position = nil
     @board = nil
   end
 
   def neighbors
-    #input - tile.position
-    #[1,1]
-    #output - array [8 tiles] which are the neighbors of the input tile
     neighbor_positions.map { |pos| @board[pos] }
   end
 
@@ -29,7 +26,6 @@ class Tile
       [-1, 0],
       [-1, -1]
     ]
-    #postions here = neighbor positions
     positions = translations.map do |translation|
       [@position[0] + translation[0], @position[1] + translation[1]]
     end
@@ -48,19 +44,19 @@ class Tile
   end
 
   def reveal
-    @revealed = true unless @flag
+    @revealed = true unless @flagged
   end
 
   def flag
-    if @flag
-      @flag = false
+    if @flagged
+      @flagged = false
     else
-      @flag = true
+      @flagged = true
     end
   end
 
   def inspect
-    puts "flag: #{@flag}"
+    puts "flagged: #{@flagged}"
     puts "bomb: #{@bomb}"
     puts "revealed: #{@revealed}"
   end
@@ -71,7 +67,7 @@ class Tile
       return "_" if neighbor_bomb_count == 0
       neighbor_bomb_count.to_s
     else
-      return "F" if flag?
+      return "F" if flagged?
       "*"
     end
   end
@@ -80,8 +76,8 @@ class Tile
     @revealed
   end
 
-  def flag?
-    @flag
+  def flagged?
+    @flagged
   end
 
   def bomb?
