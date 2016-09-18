@@ -1,42 +1,13 @@
 require_relative 'board'
 
 class Tile
-  attr_accessor :position, :board
+  attr_accessor :neighbor_bomb_count
 
   def initialize(bomb = false)
     @bomb = bomb
     @revealed = false
     @flagged = false
-    @position = nil
-    @board = nil
-  end
-
-  def neighbors
-    neighbor_positions.map { |pos| @board[pos] }
-  end
-
-  def neighbor_positions
-    translations = [
-      [1, 1],
-      [1, 0],
-      [1, -1],
-      [0, 1],
-      [0, -1],
-      [-1, 1],
-      [-1, 0],
-      [-1, -1]
-    ]
-    positions = translations.map do |translation|
-      [@position[0] + translation[0], @position[1] + translation[1]]
-    end
-
-    positions.select do |pos|
-      pos.all? { |coord| coord.between?(0, @board.size - 1) }
-    end
-  end
-
-  def neighbor_bomb_count
-    neighbors.count { |tile| tile.bomb? }
+    @neighbor_bomb_count = 0
   end
 
   def set_bomb
@@ -84,3 +55,4 @@ class Tile
     @bomb
   end
 end
+
