@@ -15,9 +15,11 @@ class Game
   end
 
   def play_turn
+    display_board
+    pos = get_pos
     system("clear")
     display_board
-    get_action(get_pos)
+    get_action(pos)
   end
 
   def get_pos
@@ -29,6 +31,7 @@ class Game
       pos = parse_pos(gets.chomp)
     end
 
+    @board[pos].highlight
     pos
   end
 
@@ -50,9 +53,11 @@ class Game
       flag(pos)
     when :r
       reveal(pos)
-    when :c
-      return nil
+    else
+      nil
     end
+
+    @board[pos].highlight
   end
 
   def read_action

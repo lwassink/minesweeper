@@ -9,6 +9,7 @@ class Tile
     @revealed = false
     @flagged = false
     @neighbor_bomb_count = 0
+    @highlight = false
   end
 
   def set_bomb
@@ -27,6 +28,14 @@ class Tile
     end
   end
 
+  def highlight
+    if @highlight
+      @highlight = false
+    else
+      @highlight = true
+    end
+  end
+
   def inspect
     puts "flagged: #{@flagged}"
     puts "bomb: #{@bomb}"
@@ -34,6 +43,10 @@ class Tile
   end
 
   def to_s
+    highlighted? ? to_s_helper.white.bold.on_black : to_s_helper
+  end
+
+  def to_s_helper
     if revealed?
       return "B".colorize(:red) if bomb?
       return "_" if neighbor_bomb_count == 0
@@ -55,6 +68,10 @@ class Tile
   def bomb?
     @bomb
   end
+
+  def highlighted?
+    @highlight
+  end
 end
 
 if __FILE__ == $PROGRAM_NAME
@@ -66,6 +83,10 @@ if __FILE__ == $PROGRAM_NAME
   t.reveal
   puts t
   t.neighbor_bomb_count = 3
+  puts t
+  t.highlight
+  puts t
+  t.highlight
   puts t
   t.set_bomb
   puts t
