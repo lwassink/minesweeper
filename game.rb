@@ -37,9 +37,11 @@ class Game
   end
 
   def valid_pos?(array)
+    row, col = array
     array.length == 2 &&
       array.all? { |el| el.is_a? Integer } &&
-      array.all? { |el| el.between?(0, 8) }
+      row.between?(0, @board.row_count - 1) &&
+      col.between?(0, @board.col_count - 1)
   end
 
   def get_action(pos)
@@ -94,6 +96,7 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   board = Board.custom_board
+  board.populate
   game = Game.new(board)
   game.play
 end

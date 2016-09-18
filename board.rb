@@ -17,7 +17,7 @@ class Board
 
   def self.valid_dimensions?(array)
     array.length == 2 &&
-      array.all? { |el| el.is_a?(Integer) && el > 0 }
+      array.all? { |el| el.is_a?(Integer) && el.between?(1,29) }
   end
 
   def self.parse_dimensions(str)
@@ -135,15 +135,26 @@ class Board
   end
 
   def render
-    printed_board = '  ' + (1..col_count).to_a.join(' ')
-    @grid.each_with_index do |row, idx|
-      printed_board << "\n#{idx + 1} #{row.map(&:to_s).join(' ')}"
+    printed_board = (row_count >= 10 ? '   ' : '  ')
+
+    (1..col_count).each do |i|
+      printed_board << i.to_s.colorize(:blue)
+      printed_board << (i >= 10 ? ' ' : '  ')
     end
+
+    @grid.each_with_index do |row, idx|
+      printed_board << "\n"
+      printed_board << (idx + 1).to_s.colorize(:blue)
+      printed_board << ' '
+      printed_board << ' ' if row_count >= 10 && idx < 9
+      printed_board << row.map(&:to_s).join('  ')
+    end
+
     printed_board
   end
 
   def bomb_count
-    (size) / 10
+    (size) / 9
   end
 
   def make_visible

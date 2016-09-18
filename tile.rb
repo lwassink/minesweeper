@@ -1,4 +1,5 @@
 require_relative 'board'
+require 'colorize'
 
 class Tile
   attr_accessor :neighbor_bomb_count
@@ -34,12 +35,12 @@ class Tile
 
   def to_s
     if revealed?
-      return "B" if bomb?
+      return "B".colorize(:red) if bomb?
       return "_" if neighbor_bomb_count == 0
-      neighbor_bomb_count.to_s
+      neighbor_bomb_count.to_s.colorize(:green)
     else
-      return "F" if flagged?
-      "*"
+      return "F".colorize(:yellow) if flagged?
+      "*".colorize(:grey)
     end
   end
 
@@ -54,5 +55,19 @@ class Tile
   def bomb?
     @bomb
   end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  t = Tile.new
+  puts t
+  t.flag
+  puts t
+  t.flag
+  t.reveal
+  puts t
+  t.neighbor_bomb_count = 3
+  puts t
+  t.set_bomb
+  puts t
 end
 
