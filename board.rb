@@ -2,19 +2,39 @@ require_relative 'tile'
 
 class Board
   include Enumerable
-  NUM_OF_BOMBS = 6
 
-  def initialize(grid = empty_grid)
-    @grid = grid
+  def self.custom_board
+    print "Enter the number of rows and columns you want (ex. 9,9): "
+    dimensions = self.parse_dimensions(gets.chomp)
+
+    until self.valid_dimensions?(dimensions)
+      print "Please enter valid dimensions (ex. 9,9)"
+      dimensions = self.parse_dimensions(gets.chomp)
+    end
+
+    self.new(self.empty_grid(*dimensions))
   end
 
-  def empty_grid
-    Array.new(9) do |row|
-      Array.new(9) do |col|
+  def self.valid_dimensions?(array)
+    array.length == 2 &&
+      array.all? { |el| el.is_a?(Integer) && el > 0 }
+  end
+
+  def self.parse_dimensions(str)
+    str.split(',').map(&:to_i)
+  end
+
+  def self.empty_grid(rows, cols)
+    Array.new(rows) do |row|
+      Array.new(cols) do |col|
          tile = Tile.new
          tile
        end
     end
+  end
+
+  def initialize(grid = nil)
+    @grid = grid || self.class.empty_grid(9,9)
   end
 
   def populate
@@ -37,7 +57,7 @@ class Board
     self.each_with_pos { |_, pos| positions << pos }
 
     positions.shuffle!
-    positions.take(NUM_OF_BOMBS)
+    positions.take(bomb_count)
   end
 
   def reveal(pos)
@@ -63,7 +83,8 @@ class Board
     end
 
     positions.select do |pos|
-      pos.all? { |coord| coord.between?(0, size - 1) }
+      row, col = pos
+      row.between?(0, row_count - 1) && col.between?(0, col_count - 1)
     end
   end
 
@@ -84,7 +105,7 @@ class Board
   end
 
   def inspect
-    "Board size: #{size}\n#{render}"
+    "Board size: #{row_count} x #{col_count}\n#{render}"
   end
 
   def each_with_pos(&prc)
@@ -101,20 +122,28 @@ class Board
     @grid[x][y]
   end
 
-  def size
+  def row_count
     @grid.length
   end
 
-  def rows
-    @grid
+  def col_count
+    @grid.first.length
+  end
+
+  def size
+    col_count * row_count
   end
 
   def render
-    printed_board = '  ' + (1..size).to_a.join(' ')
-    rows.each_with_index do |row, idx|
+    printed_board = '  ' + (1..col_count).to_a.join(' ')
+    @grid.each_with_index do |row, idx|
       printed_board << "\n#{idx + 1} #{row.map(&:to_s).join(' ')}"
     end
     printed_board
+  end
+
+  def bomb_count
+    (size) / 10
   end
 
   def make_visible
@@ -131,11 +160,10 @@ class Board
 end
 
 if __FILE__ == $PROGRAM_NAME
-  b = Board.new
+  b = Board.custom_board
   b.populate
-  b.reveal([0,0])
-  # b.render
-  # b.make_visible
+  b.reveal([3,3])
+  b.make_visible
   p b
   puts "Won: #{b.won?}"
   puts "Lost: #{b.lost?}"

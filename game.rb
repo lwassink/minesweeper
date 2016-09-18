@@ -93,6 +93,7 @@ class Game
 end
 
 if __FILE__ == $PROGRAM_NAME
-  game = Game.new
+  board = Board.custom_board
+  game = Game.new(board)
   game.play
 end
