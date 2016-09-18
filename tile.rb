@@ -43,7 +43,7 @@ class Tile
   end
 
   def to_s
-    highlighted? ? to_s_helper.white.bold.on_black : to_s_helper
+    highlighted? ? to_s_helper.white.bold.on_black.blink : to_s_helper
   end
 
   def to_s_helper

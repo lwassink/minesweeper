@@ -4,11 +4,13 @@ class Board
   include Enumerable
 
   def self.custom_board
+    system("clear")
+
     print "Enter the number of rows and columns you want (ex. 9,9): "
     dimensions = self.parse_dimensions(gets.chomp)
 
     until self.valid_dimensions?(dimensions)
-      print "Please enter valid dimensions (ex. 9,9)"
+      print "Please enter valid dimensions between 1 and 20 (ex. 9,9): "
       dimensions = self.parse_dimensions(gets.chomp)
     end
 
@@ -17,7 +19,7 @@ class Board
 
   def self.valid_dimensions?(array)
     array.length == 2 &&
-      array.all? { |el| el.is_a?(Integer) && el.between?(1,29) }
+      array.all? { |el| el.is_a?(Integer) && el.between?(1,20) }
   end
 
   def self.parse_dimensions(str)

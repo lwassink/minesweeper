@@ -15,6 +15,7 @@ class Game
   end
 
   def play_turn
+    system("clear")
     display_board
     pos = get_pos
     system("clear")
@@ -92,7 +93,8 @@ class Game
     system("clear")
     display_board
     if @board.won?
-      puts "Congratulations, you won!"
+      puts "Congratulations, you won!".bold
+      sleep(2)
     else
       puts "Sorry, you lost."
     end
